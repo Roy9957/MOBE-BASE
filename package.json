@@ -1,0 +1,16 @@
+{
+  "name": "firebase-cleanup-server",
+  "version": "1.0.0",
+  "description": "Server to cleanup Firebase Realtime Database daily",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.11.0",
+    "node-cron": "^3.0.2"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
