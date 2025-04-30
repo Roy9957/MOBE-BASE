@@ -86,7 +86,7 @@ const cleanupJob = cron.schedule('0 0 * * *', async () => {
   }
 }, {
   scheduled: true,
-  timezone: "Bangladesh/Dhaka" // Set your timezone
+  timezone: "Asia/Dhaka" // Set your timezone
 });
 
 // Manual trigger endpoint for testing
