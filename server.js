@@ -1,5 +1,4 @@
 const admin = require('firebase-admin');
-const cron = require('node-cron');
 
 // Initialize Firebase
 admin.initializeApp({
@@ -13,37 +12,56 @@ admin.initializeApp({
 
 const db = admin.database();
 
-async function cleanupDatabase() {
-  const paths = ['temporaryData', 'oldSessions'];
-  console.log('Starting database cleanup at:', new Date().toISOString());
-
-  for (const path of paths) {
-    try {
-      const ref = db.ref(path);
-      await ref.remove();
-      console.log(`Cleaned path: ${path}`);
-    } catch (error) {
-      console.error(`Error cleaning ${path}:`, error.message);
-    }
+async function clearGameData() {
+  try {
+    // Clear all chat data
+    await db.ref('chats').remove();
+    console.log('Successfully cleared all chat data');
+    
+    // Clear all player data
+    await db.ref('players').remove();
+    console.log('Successfully cleared all player data');
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error clearing data:', error);
+    return { success: false, error: error.message };
   }
 }
 
-// Run daily at midnight (server time)
-cron.schedule('0 0 * * *', cleanupDatabase);
-
-// Basic HTTP endpoint
-module.exports = (req, res) => {
+// HTTP endpoint
+module.exports = async (req, res) => {
   if (req.query.trigger === 'manual') {
-    cleanupDatabase()
-      .then(() => res.send('Manual cleanup completed'))
-      .catch(err => res.status(500).send('Cleanup failed: ' + err.message));
+    try {
+      const result = await clearGameData();
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   } else {
     res.send(`
       <html>
+        <head>
+          <title>Game Data Cleanup</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            button {
+              background: #4285f4;
+              color: white;
+              border: none;
+              padding: 10px 15px;
+              border-radius: 4px;
+              cursor: pointer;
+              font-size: 16px;
+            }
+          </style>
+        </head>
         <body>
-          <h1>Firebase Cleanup Server</h1>
-          <p>Running on: ${new Date().toString()}</p>
-          <a href="?trigger=manual">Run Manual Cleanup</a>
+          <h1>Game Data Cleanup</h1>
+          <p>This will clear all chat and player data from the database.</p>
+          <button onclick="window.location.href='?trigger=manual'">
+            Clear All Game Data Now
+          </button>
         </body>
       </html>
     `);
