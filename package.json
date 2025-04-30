@@ -1,16 +1,26 @@
 {
   "name": "firebase-cleanup-server",
   "version": "1.0.0",
-  "description": "Server to cleanup Firebase Realtime Database daily",
+  "description": "Server to cleanup Firebase Realtime Database daily at midnight Dhaka time",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "firebase-admin": "^11.11.0",
-    "node-cron": "^3.0.2"
+    "node-cron": "^3.0.2",
+    "moment-timezone": "^0.5.43"
   },
   "engines": {
     "node": "18.x"
-  }
+  },
+  "keywords": [
+    "firebase",
+    "cleanup",
+    "cron",
+    "server"
+  ],
+  "license": "MIT"
 }
