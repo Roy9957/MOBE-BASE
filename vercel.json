@@ -3,21 +3,13 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "node_modules/moment-timezone/data/packed/latest.json",
-          "node_modules/firebase-admin/**"
-        ],
-        "maxLambdaSize": "15mb"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "server.js",
-      "methods": ["GET", "POST"]
+      "dest": "server.js"
     }
   ]
 }
